@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization, Activation
 from keras.losses import SparseCategoricalCrossentropy
 import random
 
@@ -19,16 +19,41 @@ X_test = X_test.reshape(-1,28, 28, 1)
 
 # build model
 model = Sequential([
-    Conv2D(32, (3, 3), activation = 'relu', input_shape = (28, 28, 1)),
-    MaxPooling2D(2, 2),
 
-    Conv2D(64, (3, 3), activation = 'relu'),
-    MaxPooling2D(2, 2),
+    # First convolutional layer
+    # 64 filters of size 3x3, processes input image of shape 28x28x1 (MNIST grayscale)
+    Conv2D(64, (3, 3), input_shape=(28, 28, 1)),
+    BatchNormalization(),        # Normalize the outputs (activations) of this conv layer
+    Activation('relu'),          # Apply ReLU activation after BN
 
+    # Second convolutional layer
+    # Learns deeper features from first conv layer
+    Conv2D(64, (5, 5)),
+    BatchNormalization(),
+    Activation('relu'),
+
+    # Third convolutional layer with larger scanning area (5x5)
+    # Helps detect complex patterns (e.g., curves/loops in digits)
+    Conv2D(128, (5, 5)),
+    BatchNormalization(),
+    Activation('relu'),
+
+    # Max pooling layer
+    # Downsamples feature maps by taking the max in 2x2 regions
+    MaxPooling2D((2, 2)),
+
+    # Flatten the 3D feature maps to 1D for the dense layer
     Flatten(),
-    Dense(64, activation = 'relu'),
-    Dropout(0.5), # randomly kills 50% of the neuron and avoids overfitting
-    Dense(10, activation = 'linear')
+
+    # Fully connected layer with 128 neurons
+    Dense(128),
+    BatchNormalization(),        # Normalize before activation
+    Activation('relu'),
+    Dropout(0.5),                # Randomly turn off 50% of neurons to prevent overfitting
+
+    # Output layer: 10 neurons for 10 digit classes (0-9)
+    # Softmax converts outputs to probability scores
+    Dense(10, activation='linear')
 ])
 
 # compile model
