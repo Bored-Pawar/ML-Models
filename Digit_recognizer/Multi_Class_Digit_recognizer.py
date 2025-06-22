@@ -4,6 +4,7 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from keras.losses import SparseCategoricalCrossentropy
+import random
 
 # load data
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -50,7 +51,7 @@ test_loss, test_acc = model.evaluate(X_test, y_test)
 import matplotlib.pyplot as plt
 
 # Predict a test image
-index = 9  # You can change this to any test index (0–9999)
+index = random.randint(0, 9999)  # You can change this to any test index (0–9999)
 img = X_test[index]
 actual_label = y_test[index]
 
