@@ -52,7 +52,7 @@ df = pd.read_csv("/kaggle/input/fashionmnist/fashion-mnist_train.csv")
 train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
 
 # Convert labels to one-hot (for categorical_crossentropy)
-from tensorflow.keras.utils import to_categorical
+from keras.utils import to_categorical
 
 train_images = train_df.drop("label", axis=1).values.reshape(-1, 28, 28, 1) / 255.0
 train_labels = to_categorical(train_df["label"])
