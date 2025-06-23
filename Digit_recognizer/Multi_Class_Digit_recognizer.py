@@ -5,6 +5,7 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization, Activation
 from keras.losses import SparseCategoricalCrossentropy
 import random
+from sklearn.model_selection import StratifiedShuffleSplit # this allows validation data to have equal amount of all classes
 
 # load data
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -63,8 +64,17 @@ model.compile(
     metrics = ['accuracy']
 )
 
+# Stratified split: 80% training, 20% validation
+splitter = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42) #random_state number is used to keep the randomization always the same 42 because The Hitchhiker’s Guide to the Galaxy joke
+for train_idx, val_idx in splitter.split(X_train, y_train):
+    X_train_split, X_val = X_train[train_idx], X_train[val_idx]
+    y_train_split, y_val = y_train[train_idx], y_train[val_idx]
+
+# Train the model with stratified validation
+model.fit(X_train_split, y_train_split, epochs=10, validation_data=(X_val, y_val))
+
 # train model
-model.fit(X_train, y_train, epochs = 10, validation_split = 0.2)
+# model.fit(X_train, y_train, epochs = 10, validation_split = 0.2)
 
 # Save the trained model
 model.save("digit_model.h5")
