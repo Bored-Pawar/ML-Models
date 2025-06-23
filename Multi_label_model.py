@@ -5,9 +5,8 @@ import matplotlib.pyplot as plt
 
 import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
-from keras import Sequential
+from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
-
 
 # Load CSV file
 train_df = pd.read_csv("/kaggle/input/fashionmnist/fashion-mnist_train.csv")
@@ -24,29 +23,6 @@ images = images.values.reshape(-1, 28, 28, 1)
 
 # One-hot encode labels (because we are using categorical classification)
 labels = tf.keras.utils.to_categorical(labels, num_classes=10)
-
-# Create an ImageDataGenerator (here no augmentation, only splitting)
-datagen = ImageDataGenerator(validation_split=0.2)  # split training and validation
-
-# Create training and validation generators
-BATCH_SIZE = 32
-IMAGE_SIZE = (28, 28)  # fashion MNIST image size
-
-train_generator = datagen.flow(
-    x=images,
-    y=labels,
-    batch_size=BATCH_SIZE,
-    subset="training",
-    shuffle=True
-)
-
-val_generator = datagen.flow(
-    x=images,
-    y=labels,
-    batch_size=BATCH_SIZE,
-    subset="validation",
-    shuffle=False
-)
 
 # setting up the model layers
 model = Sequential([
@@ -76,7 +52,7 @@ df = pd.read_csv("/kaggle/input/fashionmnist/fashion-mnist_train.csv")
 train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
 
 # Convert labels to one-hot (for categorical_crossentropy)
-from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 
 train_images = train_df.drop("label", axis=1).values.reshape(-1, 28, 28, 1) / 255.0
 train_labels = to_categorical(train_df["label"])
