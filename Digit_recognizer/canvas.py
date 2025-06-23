@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from keras.models import load_model
 
 # Load trained model
-model = load_model(r"C:\Users\Aditya Pramod Pawar\Machine Learning\Digit_recognizer\digit_model.h5")
+model = load_model(r"C:\Users\Aditya Pramod Pawar\Machine Learning\Digit_recognizer\digit_model.h5", compile=False)
 
 # Create a blank black canvas
 canvas_size = 300

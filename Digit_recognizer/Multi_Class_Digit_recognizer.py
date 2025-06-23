@@ -6,6 +6,15 @@ from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNor
 from keras.losses import SparseCategoricalCrossentropy
 import random
 from sklearn.model_selection import StratifiedShuffleSplit # this allows validation data to have equal amount of all classes
+from keras.callbacks import ReduceLROnPlateau
+
+lr_schedule = ReduceLROnPlateau(
+    monitor='val_loss',     # What to monitor
+    factor=0.5,             # Reduce LR by half
+    patience=3,             # Wait 3 epochs before reducing LR
+    verbose=1,              # Print when it reduces LR
+    min_lr=1e-6             # Don’t go below this
+)
 
 # load data
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -22,8 +31,8 @@ X_test = X_test.reshape(-1,28, 28, 1)
 model = Sequential([
 
     # First convolutional layer
-    # 64 filters of size 3x3, processes input image of shape 28x28x1 (MNIST grayscale)
-    Conv2D(64, (3, 3),  padding='same', input_shape=(28, 28, 1)),
+    # 32 filters of size 3x3, processes input image of shape 28x28x1 (MNIST grayscale)
+    Conv2D(32, (3, 3),  padding='same', input_shape=(28, 28, 1)),
     BatchNormalization(),        # Normalize the outputs (activations) of this conv layer
     Activation('relu'),          # Apply ReLU activation after BN
 
@@ -50,8 +59,10 @@ model = Sequential([
     # Flatten the 3D feature maps to 1D for the dense layer
     Flatten(),
 
+    Dropout(0.3), # Randomly turn off 30% of neurons to prevent overfitting
+
     # Fully connected layer with 128 neurons
-    Dense(128),
+    Dense(512),
     BatchNormalization(),        # Normalize before activation
     Activation('relu'),
     Dropout(0.5),                # Randomly turn off 50% of neurons to prevent overfitting
@@ -75,7 +86,7 @@ for train_idx, val_idx in splitter.split(X_train, y_train):
     y_train_split, y_val = y_train[train_idx], y_train[val_idx]
 
 # Train the model with stratified validation
-model.fit(X_train_split, y_train_split, epochs=10, batch_size = 256, validation_data=(X_val, y_val))
+model.fit(X_train_split, y_train_split, epochs=30, batch_size = 64, validation_data=(X_val, y_val), callbacks=[lr_schedule])
 
 # # train model
 # model.fit(X_train, y_train, epochs = 10, validation_split = 0.2)
