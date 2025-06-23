@@ -23,19 +23,23 @@ model = Sequential([
 
     # First convolutional layer
     # 64 filters of size 3x3, processes input image of shape 28x28x1 (MNIST grayscale)
-    Conv2D(64, (3, 3), input_shape=(28, 28, 1)),
+    Conv2D(64, (3, 3),  padding='same', input_shape=(28, 28, 1)),
     BatchNormalization(),        # Normalize the outputs (activations) of this conv layer
     Activation('relu'),          # Apply ReLU activation after BN
 
     # Second convolutional layer
     # Learns deeper features from first conv layer
-    Conv2D(64, (5, 5)),
+    Conv2D(64, (5, 5),  padding='same'),
     BatchNormalization(),
     Activation('relu'),
 
+    # Max pooling layer
+    # Downsamples feature maps by taking the max in 2x2 regions
+    MaxPooling2D((2, 2)),
+
     # Third convolutional layer with larger scanning area (5x5)
     # Helps detect complex patterns (e.g., curves/loops in digits)
-    Conv2D(128, (5, 5)),
+    Conv2D(128, (5, 5),  padding='same'),
     BatchNormalization(),
     Activation('relu'),
 
@@ -71,9 +75,9 @@ for train_idx, val_idx in splitter.split(X_train, y_train):
     y_train_split, y_val = y_train[train_idx], y_train[val_idx]
 
 # Train the model with stratified validation
-model.fit(X_train_split, y_train_split, epochs=10, validation_data=(X_val, y_val))
+model.fit(X_train_split, y_train_split, epochs=10, batch_size = 256, validation_data=(X_val, y_val))
 
-# train model
+# # train model
 # model.fit(X_train, y_train, epochs = 10, validation_split = 0.2)
 
 # Save the trained model
