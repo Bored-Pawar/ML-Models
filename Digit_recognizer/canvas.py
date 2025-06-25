@@ -15,6 +15,7 @@ drawing = False
 ix, iy = -1, -1
 
 # Mouse drawing function
+# Mouse drawing function
 def draw(event, x, y, flags, param):
     global drawing, ix, iy
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -22,10 +23,10 @@ def draw(event, x, y, flags, param):
         ix, iy = x, y
     elif event == cv2.EVENT_MOUSEMOVE:
         if drawing:
-            cv2.circle(img, (x, y), 5, (255), -1)  # thinner brush
+            cv2.circle(img, (x, y), 4, (255), -1)  # thinner brush
     elif event == cv2.EVENT_LBUTTONUP:
         drawing = False
-        cv2.circle(img, (x, y), 5, (255), -1)
+        cv2.circle(img, (x, y), 2, (255), -1)
 
 # Preprocessing to match MNIST style
 def preprocess(image):
