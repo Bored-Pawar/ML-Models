@@ -11,7 +11,7 @@ from mpl_toolkits.mplot3d import Axes3D
 features = []
 targets = []
 
-with open('logistic_regression_data.csv', 'r') as file:
+with open(r'C:\Users\Aditya Pramod Pawar\Machine Learning\Logistic_regression\logistic_regression_data.csv') as file:
     reader = csv.reader(file)
     next(reader) # skip headers
     for row in reader:

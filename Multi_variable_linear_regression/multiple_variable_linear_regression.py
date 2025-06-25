@@ -20,7 +20,7 @@ from mpl_toolkits.mplot3d import Axes3D
 features = []
 targets = []
 
-with open('multiple_variable_house_data.csv', 'r') as file:
+with open(r'C:\Users\Aditya Pramod Pawar\Machine Learning\Multi_variable_linear_regression\multiple_variable_house_data.csv') as file:
     reader = csv.reader(file)
     next(reader)  # Skip header
     for row in reader:

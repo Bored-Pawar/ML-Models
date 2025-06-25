@@ -6,7 +6,7 @@ x, y = [], []
 
 # Read CSV file
 try:
-    with open('one_variable_house_data.csv', 'r') as file:
+    with open(r'C:\Users\Aditya Pramod Pawar\Machine Learning\Linear_regression\one_variable_house_data.csv') as file:
         reader = csv.reader(file)
         next(reader)
 
