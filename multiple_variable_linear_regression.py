@@ -4,6 +4,8 @@
 # can be solved with regularization 
 
 
+# check model_degree_selection soolves the same dataset but works faster and is made my scikit_learn
+
 
 
 
