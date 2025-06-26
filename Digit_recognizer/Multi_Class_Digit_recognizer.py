@@ -4,11 +4,13 @@ from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization, Activation
 from keras.losses import SparseCategoricalCrossentropy
-import random
+from random import randint
 from sklearn.model_selection import StratifiedShuffleSplit # this allows validation data to have equal amount of all classes
 from keras.callbacks import ReduceLROnPlateau
 
-lr_schedule = ReduceLROnPlateau(
+# why have ReduceLrROn Plateau >>> Early in training, big steps help explore and learn quickly. Later in training,
+# especially near a minimum, you want small, precise steps so you don't overshoot or bounce around the minimum.
+lr_schedule = ReduceLROnPlateau(  # learning rate fine tuning during the model training
     monitor='val_loss',     # What to monitor
     factor=0.5,             # Reduce LR by half
     patience=3,             # Wait 3 epochs before reducing LR
@@ -24,7 +26,7 @@ X_train = X_train / 255.0
 X_test = X_test / 255.0
 
 # Reshape to  add channel dimesion (needed of Convo2D)
-X_train = X_train.reshape(-1, 28, 28, 1) # the -1 tell numpy to to autoshape 
+X_train = X_train.reshape(-1, 28, 28, 1) # the -1 tell numpy to to autoshape
 X_test = X_test.reshape(-1,28, 28, 1) 
 
 # build model
@@ -84,6 +86,10 @@ splitter = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42) #r
 for train_idx, val_idx in splitter.split(X_train, y_train):
     X_train_split, X_val = X_train[train_idx], X_train[val_idx]
     y_train_split, y_val = y_train[train_idx], y_train[val_idx]
+# if u want to split in a 60 : 20 : 20 then u use same syntax but do two split functions,
+# split 1 >> 80 : 20 where 80 is x_train + x_cv and 20 is x_test
+# split 2 >> 75 : 25 where 75 is x_train and 25 is c_cv
+# we didn't do this here becoz we already have a different test_dataset
 
 # Train the model with stratified validation
 model.fit(X_train_split, y_train_split, epochs=30, batch_size = 64, validation_data=(X_val, y_val), callbacks=[lr_schedule])
@@ -101,7 +107,7 @@ test_loss, test_acc = model.evaluate(X_test, y_test)
 import matplotlib.pyplot as plt
 
 # Predict a test image
-index = random.randint(0, 9999)  # You can change this to any test index (0–9999)
+index = randint(0, 9999)  # You can change this to any test index (0–9999)
 img = X_test[index]
 actual_label = y_test[index]
 
