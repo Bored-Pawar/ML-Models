@@ -5,7 +5,7 @@ import pandas as pd
 model = pyo.ConcreteModel()
 
 # load csv
-df = pd.read_csv(r"C:\Users\Aditya Pramod Pawar\Machine Learning\Operational_Research\energy_prices_week.csv")
+df = pd.read_csv(r"C:\Users\Aditya Pramod Pawar\Machine Learning\Operations_Research\energy_prices_week.csv")
 T = list(df["Hour"]) # hours from 1 to 168
 price_dict = {t : p for t, p in zip(df['Hour'], df["Price($/MWh)"])}
 
@@ -97,7 +97,7 @@ def profit_rule(model, t):
 model.objective = pyo.Objective(rule = profit_rule, sense = pyo.maximize)
 
 # create solver
-solver = pyo.SolverFactory('cbc')
+solver = pyo.SolverFactory('highs')
 
 # solve
 results = solver.solve(model, tee = True)
