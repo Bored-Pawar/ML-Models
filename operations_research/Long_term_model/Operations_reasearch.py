@@ -5,7 +5,7 @@ import pandas as pd
 model = pyo.ConcreteModel()
 
 # load csv
-df = pd.read_csv(r"C:\Users\Aditya Pramod Pawar\Machine Learning\Operations_Research\energy_prices_week.csv")
+df = pd.read_csv(r"C:\Users\Aditya Pramod Pawar\Machine Learning\Operations_Research\Long_term_model\energy_prices_week.csv")
 T = list(df["Hour"]) # hours from 1 to 168
 price_dict = {t : p for t, p in zip(df['Hour'], df["Price($/MWh)"])}
 
@@ -89,7 +89,7 @@ def energy_bounds_rule(model, t):
 model.energy_bounds = pyo.Constraint(model.T, rule = energy_bounds_rule)
 
 # objective funtion
-def profit_rule(model, t):
+def profit_rule(model):
     return sum(
         (model.price[t] * model.discharge[t] * model.eta_discharge) - (model.price[t] * model.charge[t] / model.eta_charge)
         for t in model.T
