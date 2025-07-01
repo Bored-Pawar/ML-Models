@@ -18,8 +18,8 @@ df = pd.read_csv(r"C:\Users\Aditya Pramod Pawar\Machine Learning\Operations_Rese
 for current_slot in range(toatal_slots - slots_per_day):
     horizon_df = df.iloc[current_slot : current_slot + slots_per_day].copy()
 
-    # boolean variable for final day
-    is_last_window = (current_slot == toatal_slots - slots_per_day - 1)
+    # # boolean variable for final day
+    # is_last_window = (current_slot == toatal_slots - slots_per_day - 1)
 
     # build / initialize model
     model = pyo.ConcreteModel()
@@ -106,7 +106,7 @@ for current_slot in range(toatal_slots - slots_per_day):
     model.energy_balance_constraint = pyo.Constraint(model.T, rule = energy_babalnce_rule)
 
     # final energy constrain
-    if is_last_window:
+    if (current_slot >= slots_per_day * 6  and current_slot <= slots_per_day * 7):
         def final_energy_rule(model):
             return model.energy[model.T.last()] == model.final_energy
         model.final_energy_constraint = pyo.Constraint(rule = final_energy_rule)
